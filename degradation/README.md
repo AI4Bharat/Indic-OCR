@@ -22,6 +22,7 @@ The functions are:
 14. rotate
 15. shake
 16. remove_bg
+17. degrade_stamp
 
 		
 
@@ -255,3 +256,19 @@ degrade.save(newimg, "newdocimg.jpg")
 * Parameters:
     * img:
         * type: image file
+
+
+## degrade_stamp
+
+* Applies degradation effect on stamp image
+* Appears like a real world stamp
+* Parameters:
+    * img:
+        * type: image file
+    * kernel:
+        * structuring element
+        * type: numpy 2d binary array
+        * default: np.ones((3, 3), np.uint8)
+    * iterations:
+        * measure of degradation effect
+        * default: 5

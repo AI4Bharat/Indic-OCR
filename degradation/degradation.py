@@ -1,5 +1,6 @@
 import numpy as np
 import imutils
+import random
 import cv2
 
 
@@ -205,3 +206,29 @@ class degrade:
         result[:, :, 3] = mask
 
         return result
+
+
+    def degrade_stamp(img, kernel=np.ones((3, 3)), iterations=5):
+        quadrant = random.choice([1, 2, 3, 4])
+        img_h, img_w, _ = img.shape
+
+        if quadrant == 1: h1, h2, w1, w2 = 0, img_h//2, img_w//2, img_w
+        elif quadrant == 2: h1, h2, w1, w2 = 0, img_h//2, 0, img_w//2
+        elif quadrant == 3: h1, h2, w1, w2 = img_h//2, img_h, 0, img_w//2
+        else: h1, h2, w1, w2 = img_h//2, img_h, img_w//2, img_w
+
+        imgpart = img[h1: h2, w1: w2]
+        imgpart = cv2.erode(imgpart, kernel=kernel, iterations=iterations)
+        img[h1: h2, w1: w2] = imgpart
+
+        if quadrant == 1: h1, h2, w1, w2 = 0, img_h*2//3, img_w//3, img_w
+        elif quadrant == 2: h1, h2, w1, w2 = 0, img_h*2//3, 0, img_w*2//3
+        elif quadrant == 3: h1, h2, w1, w2 = img_h//3, img_h, 0, img_w*2//3
+        else: h1, h2, w1, w2 = img_h//3, img_h, img_w//3, img_w
+
+        imgpart = img[h1: h2, w1: w2]
+        imgpart = cv2.erode(imgpart, kernel=kernel, iterations=iterations)
+        img[h1: h2, w1: w2] = imgpart
+        
+        img = cv2.erode(img, kernel=kernel, iterations=iterations)
+        return img
